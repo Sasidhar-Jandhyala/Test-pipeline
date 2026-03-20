@@ -1,0 +1,25 @@
+name: DevOps Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Build Docker Image
+      run: docker build -t my-nginx-app .
+
+    - name: Login to DockerHub
+      run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+    - name: Tag Image
+      run: docker tag my-nginx-app sasidhar1710/my-nginx-app
+
+    - name: Push Image
+      run: docker push sasidhar1710/my-nginx-app
